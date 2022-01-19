@@ -22,13 +22,13 @@ class _MemberListViewState extends State<MemberListView> {
   }
 
   Future<void> _loadData() async {
-    const dataUrl = 'https://api.github.com/orgs/simplonco/members';
+    const dataUrl = 'https://pokeapi.co/api/v2/pokemon/';
     final response = await http.get(Uri.parse(dataUrl));
     setState(() {
-      final dataList = json.decode(response.body) as List;
-      for (final item in dataList) {
-        final login = item['login'] as String? ?? '';
-        final url = item['avatar_url'] as String? ?? '';
+      final dataList = json.decode(response.body);
+      for (final item in dataList['results']) {
+        final login = item['name'] as String? ?? '';
+        final url = item['url'] as String? ?? '';
         final member = Member(login, url);
         _members.add(member);
       }
@@ -41,7 +41,7 @@ class _MemberListViewState extends State<MemberListView> {
       child: ListTile(
         title: Text('${_members[i].login}', style: _biggerFont),
         leading: CircleAvatar(
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.pink,
           backgroundImage: NetworkImage(_members[i].avatarUrl),
         ),
       ),
@@ -52,7 +52,7 @@ class _MemberListViewState extends State<MemberListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Github simplonco\'s members'),
+        title: const Text('Pokedex'),
       ),
       body: ListView.separated(
           itemCount: _members.length,
